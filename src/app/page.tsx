@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-16">
@@ -14,6 +16,14 @@ export default function HomePage() {
       </p>
       <div className="mt-8 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
         App booted successfully against PostgreSQL via Prisma.
+      </div>
+      <div className="mt-6">
+        <Link
+          href="/catalog"
+          className="inline-flex items-center gap-1 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-700"
+        >
+          Browse Catalog →
+        </Link>
       </div>
     </main>
   );
