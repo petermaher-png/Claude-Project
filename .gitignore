@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment — never commit real secrets
+.env
+.env.local
+.env.*.local
+
+# Prisma
+# schema.prisma and migrations/ ARE committed — only generated client output is ignored
+prisma/generated/
+generated/prisma/
+
+# Testing
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Deployment
+.vercel
+.netlify
+
+# Local certs
+*.pem

@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductLineStatus {
+  ACTIVE
+  PLANNED
+  EXPLORATION
+}
+
+model ProductLine {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique
+  status      ProductLineStatus @default(PLANNED)
+  description String?
+  products    Product[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([status])
+}
+
+model Product {
+  id                 String            @id @default(cuid())
+  productLineId      String
+  productLine        ProductLine       @relation(fields: [productLineId], references: [id], onDelete: Cascade)
+  name               String
+  sku                String            @unique
+  specs              Json
+  certificationNotes String?
+  certifications     Json?
+  productSuppliers   ProductSupplier[]
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  @@index([productLineId])
+}
+
+model Supplier {
+  id               String            @id @default(cuid())
+  name             String
+  contactEmail     String?
+  contactPhone     String?
+  contactPerson    String?
+  notes            String?
+  productSuppliers ProductSupplier[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([name])
+}
+
+model ProductSupplier {
+  id           String   @id @default(cuid())
+  productId    String
+  supplierId   String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supplier     Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  pricingBands Json
+  leadTimeDays Int?
+  paymentTerms String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([productId, supplierId])
+  @@index([productId])
+  @@index([supplierId])
+}
+
+model ClientNeed {
+  id              String           @id @default(cuid())
+  needText        String
+  sector          String?
+  application     String?
+  recommendations Recommendation[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([createdAt])
+  @@index([sector])
+}
+
+model Recommendation {
+  id           String     @id @default(cuid())
+  clientNeedId String
+  clientNeed   ClientNeed @relation(fields: [clientNeedId], references: [id], onDelete: Cascade)
+  proposal     Json
+  reasoning    String
+  reviewed     Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([clientNeedId])
+  @@index([reviewed])
+}
