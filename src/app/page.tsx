@@ -17,12 +17,18 @@ export default function HomePage() {
       <div className="mt-8 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
         App booted successfully against PostgreSQL via Prisma.
       </div>
-      <div className="mt-6">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
         <Link
           href="/catalog"
           className="inline-flex items-center gap-1 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-700"
         >
           Browse Catalog →
+        </Link>
+        <Link
+          href="/intake"
+          className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+        >
+          Client Needs →
         </Link>
       </div>
     </main>
