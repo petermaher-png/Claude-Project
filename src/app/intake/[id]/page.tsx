@@ -2,6 +2,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { DeleteClientNeedButton } from "@/components/DeleteClientNeedButton";
+import { GenerateRecommendationButton } from "@/components/GenerateRecommendationButton";
+import { RecommendationStatusBadge } from "@/components/RecommendationStatusBadge";
+
+const REASONING_PREVIEW_LENGTH = 220;
+
+function truncate(text: string, length: number): string {
+  if (text.length <= length) return text;
+  return `${text.slice(0, length).trimEnd()}…`;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -68,15 +77,18 @@ export default async function ClientNeedDetailPage({
       </div>
 
       <div className="mt-8">
-        <h2 className="text-sm font-medium uppercase tracking-wide text-slate-500">
-          Recommendations
-        </h2>
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-sm font-medium uppercase tracking-wide text-slate-500">
+            Recommendations
+          </h2>
+          <GenerateRecommendationButton clientNeedId={clientNeed.id} />
+        </div>
         {clientNeed.recommendations.length === 0 ? (
           <div className="mt-3 rounded-lg border border-dashed border-slate-300 bg-white px-6 py-10 text-center">
             <p className="text-sm text-slate-600">No recommendations yet.</p>
             <p className="mt-1 text-xs text-slate-500">
-              The recommendation engine will populate this once it&apos;s
-              built.
+              Click &quot;Generate Recommendation&quot; to have Claude propose
+              equipment, material, and sourcing for this need.
             </p>
           </div>
         ) : (
@@ -86,13 +98,21 @@ export default async function ClientNeedDetailPage({
                 key={recommendation.id}
                 className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
               >
-                <p className="text-sm text-slate-900">
-                  {recommendation.reasoning}
+                <div className="flex items-center justify-between gap-4">
+                  <RecommendationStatusBadge reviewed={recommendation.reviewed} />
+                  <span className="text-xs text-slate-500">
+                    {recommendation.createdAt.toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-slate-700">
+                  {truncate(recommendation.reasoning, REASONING_PREVIEW_LENGTH)}
                 </p>
-                <p className="mt-1 text-xs text-slate-500">
-                  {recommendation.reviewed ? "Reviewed" : "Pending review"} ·{" "}
-                  {recommendation.createdAt.toLocaleDateString()}
-                </p>
+                <Link
+                  href={`/recommendations/${recommendation.id}`}
+                  className="mt-2 inline-block text-sm font-medium text-slate-600 hover:text-slate-900"
+                >
+                  View details →
+                </Link>
               </li>
             ))}
           </ul>
