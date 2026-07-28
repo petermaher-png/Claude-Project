@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build
+        run: npm run build
+        env:
+          # Build-time only. Next.js needs these present to compile even though
+          # no real DB/API call happens during `next build` — Prisma reads
+          # DATABASE_URL at import time and will fail fast if it's unset.
+          DATABASE_URL: "postgresql://pmg:pmg_dev_password@localhost:5432/pmg_solution_engine"
+          ANTHROPIC_API_KEY: "build-placeholder"
+
+      # No test step yet — there's no test suite in Phase 1. Add one here
+      # (e.g. `npm test`) once the recommendation engine has real logic
+      # worth regression-testing, per ROADMAP.md issue 6.
