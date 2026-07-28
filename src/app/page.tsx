@@ -30,6 +30,12 @@ export default function HomePage() {
         >
           Client Needs →
         </Link>
+        <Link
+          href="/validation"
+          className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+        >
+          Internal Validation →
+        </Link>
       </div>
     </main>
   );

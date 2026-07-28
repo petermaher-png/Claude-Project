@@ -125,6 +125,75 @@ async function main() {
     products: products.map((p) => p.sku),
     supplier: supplier.name,
   });
+
+  // --- ROADMAP item 7: Internal validation ---
+  // Realistic-but-placeholder REDDOT client-need scenarios, standing in for
+  // 2-3 real upcoming conversations Peter can run the engine against. Sector/
+  // application combos are typical of REDDOT's obstruction-lighting line and
+  // are deliberately generic — no real customer names or data.
+  const clientNeeds = [
+    {
+      id: "seed-clientneed-reddot-airport",
+      needText:
+        "We're upgrading obstruction lighting along the approach path and " +
+        "perimeter fencing at a regional airport ahead of next quarter's " +
+        "inspection. Looking for medium-intensity red obstruction lights " +
+        "on the boundary structures, plus a centralized controller so our " +
+        "maintenance team can monitor status and get photocell-based " +
+        "on/off switching instead of manual checks. Needs to meet FAA " +
+        "AC 150/5345-43 and ICAO Annex 14 requirements since this feeds " +
+        "into our annual compliance filing. Budget allows for a phased " +
+        "rollout — first the north perimeter, then the rest next fiscal " +
+        "year.",
+      sector: "Aviation / Airports",
+      application: "Airport perimeter and approach lighting compliance",
+    },
+    {
+      id: "seed-clientneed-reddot-telecom-tower",
+      needText:
+        "Client operates a telecom tower portfolio and just got notice " +
+        "that three towers (all around 100-120m) need aviation obstruction " +
+        "lighting installed before the local civil aviation authority will " +
+        "sign off on the new builds. They want high-intensity lighting " +
+        "visible day and night per ICAO Annex 14, and ideally a way to " +
+        "remotely confirm each tower's light is functioning without " +
+        "sending a technician up — GPS-synced flashing across the towers " +
+        "would be a nice-to-have so they don't flash out of sync with " +
+        "each other. Power at each site is 220V. They asked for a rough " +
+        "lead time since two of the towers are already built and waiting " +
+        "on lighting to get their permit finalized.",
+      sector: "Telecommunications",
+      application: "Telecom tower aviation obstruction lighting",
+    },
+    {
+      id: "seed-clientneed-reddot-wind-farm",
+      needText:
+        "Wind farm developer reached out about obstruction lighting for " +
+        "a new turbine cluster (12 turbines, nacelle height around 140m). " +
+        "They need something FAA/ICAO compliant for nighttime and low-" +
+        "visibility marking, and they specifically asked whether we can " +
+        "supply a monitoring/control unit that can flag a failed light " +
+        "back to their SCADA system rather than relying on a site visit — " +
+        "the turbines are in a fairly remote location so truck rolls are " +
+        "expensive for them. Still early — they want a budgetary quote " +
+        "and lead time before this goes to their procurement team.",
+      sector: "Renewable Energy",
+      application: "Wind turbine obstruction lighting and remote monitoring",
+    },
+  ];
+
+  for (const clientNeed of clientNeeds) {
+    await prisma.clientNeed.upsert({
+      where: { id: clientNeed.id },
+      update: {},
+      create: clientNeed,
+    });
+  }
+
+  console.log(
+    "Seeded internal-validation client-need scenarios:",
+    clientNeeds.map((c) => c.application),
+  );
 }
 
 main()

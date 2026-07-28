@@ -13,6 +13,13 @@ enum ProductLineStatus {
   EXPLORATION
 }
 
+enum ValidationOutcome {
+  PENDING
+  ACCURATE
+  PARTIALLY_ACCURATE
+  INACCURATE
+}
+
 model ProductLine {
   id          String            @id @default(cuid())
   name        String
@@ -88,15 +95,18 @@ model ClientNeed {
 }
 
 model Recommendation {
-  id           String     @id @default(cuid())
-  clientNeedId String
-  clientNeed   ClientNeed @relation(fields: [clientNeedId], references: [id], onDelete: Cascade)
-  proposal     Json
-  reasoning    String
-  reviewed     Boolean    @default(false)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id                String            @id @default(cuid())
+  clientNeedId      String
+  clientNeed        ClientNeed        @relation(fields: [clientNeedId], references: [id], onDelete: Cascade)
+  proposal          Json
+  reasoning         String
+  reviewed          Boolean           @default(false)
+  validationOutcome ValidationOutcome @default(PENDING)
+  validationNotes   String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
   @@index([clientNeedId])
   @@index([reviewed])
+  @@index([validationOutcome])
 }

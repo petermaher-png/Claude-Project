@@ -39,12 +39,20 @@ export default async function IntakePage() {
             {clientNeeds.length === 1 ? "" : "s"} captured.
           </p>
         </div>
-        <Link
-          href="/intake/new"
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-700"
-        >
-          + New Client Need
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/validation"
+            className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+          >
+            Internal Validation →
+          </Link>
+          <Link
+            href="/intake/new"
+            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-700"
+          >
+            + New Client Need
+          </Link>
+        </div>
       </div>
 
       {clientNeeds.length === 0 ? (

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { ReviewToggleButton } from "@/components/ReviewToggleButton";
 import { RecommendationStatusBadge } from "@/components/RecommendationStatusBadge";
+import { ValidationOutcomeBadge } from "@/components/ValidationOutcomeBadge";
+import { ValidationFeedbackForm } from "@/components/ValidationFeedbackForm";
 
 export const dynamic = "force-dynamic";
 
@@ -140,7 +142,10 @@ export default async function RecommendationDetailPage({
             Proposed Solution
           </h1>
         </div>
-        <RecommendationStatusBadge reviewed={recommendation.reviewed} />
+        <div className="flex flex-col items-end gap-2">
+          <RecommendationStatusBadge reviewed={recommendation.reviewed} />
+          <ValidationOutcomeBadge outcome={recommendation.validationOutcome} />
+        </div>
       </div>
       <p className="mt-2 text-slate-600">
         Generated {recommendation.createdAt.toLocaleDateString()} at{" "}
@@ -206,6 +211,21 @@ export default async function RecommendationDetailPage({
         <ReviewToggleButton
           recommendationId={recommendation.id}
           reviewed={recommendation.reviewed}
+        />
+      </div>
+
+      <div className="mt-8 border-t border-slate-200 pt-6">
+        <h2 className="text-sm font-medium uppercase tracking-wide text-slate-500">
+          Internal Validation
+        </h2>
+        <p className="mb-3 mt-1 text-sm text-slate-600">
+          Record what this recommendation got right or wrong against a real
+          REDDOT conversation — this feeds the Phase 2 go/no-go decision.
+        </p>
+        <ValidationFeedbackForm
+          recommendationId={recommendation.id}
+          validationOutcome={recommendation.validationOutcome}
+          validationNotes={recommendation.validationNotes}
         />
       </div>
     </main>
